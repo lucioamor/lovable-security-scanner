@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lovable Security Scanner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="sidepanel.css">
+  <style>
+    /* Side panel overrides — single column layout */
+    body { min-height: 100vh; }
+    .sidebar { display: none; }
+    .main-content { margin-left: 0; padding: 20px 16px; }
+    /* Top nav for side panel */
+    .sp-topnav {
+      display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);
+    }
+    .sp-topnav .nav-tab {
+      padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer;
+      font-size: 0.75rem; font-weight: 600; color: var(--text-secondary);
+      background: transparent; border: 1px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    .sp-topnav .nav-tab:hover { background: var(--bg-card); color: var(--text-primary); }
+    .sp-topnav .nav-tab.active {
+      background: rgba(108, 99, 255, 0.15); color: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+    .sp-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);
+    }
+    .sp-header-logo { font-size: 1.3rem; }
+    .sp-header-title { font-size: 0.85rem; font-weight: 800; }
+    .sp-header-sub { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    .sp-footer {
+      margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border-subtle);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <main class="main-content">
+      <div class="sp-header">
+        <div class="sp-header-logo">🛡️</div>
+        <div>
+          <div class="sp-header-title">Lovable Security Scanner</div>
+          <div class="sp-header-sub">LOVABLE AUDIT TOOL</div>
+        </div>
+        <div style="margin-left:auto" id="lang-switcher"></div>
+      </div>
+      <div class="sp-topnav" id="topnav"></div>
+      <div id="page-content"></div>
+      <div class="sp-footer">
+        <div class="credits-card">
+          <a href="https://linkedin.com/in/lucioamorim" target="_blank">
+            <div class="credits-label" id="credits-label">Created by</div>
+            <div class="credits-name">Lucio Amorim</div>
+            <div class="credits-role">Lovable Ambassador</div>
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>
