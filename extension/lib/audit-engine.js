@@ -3,8 +3,8 @@
 // ============================================================
 
 import { getSessionToken, listProjects, testBOLA, getProjectFiles, getFileContent, getProjectMessages, setDelay } from './api-client.js';
-import { scanContent, isSensitiveFile, SENSITIVE_FILES } from './security-rules.js';
-import { computeRiskScore, getSeverity } from './risk-scorer.js';
+import { scanContent, isSensitiveFile, SENSITIVE_FILES } from './data-patterns.js';
+import { computeRiskScore, getSeverity } from './health-scorer.js';
 
 let aborted = false;
 
@@ -140,7 +140,7 @@ async function scanProject(project, config) {
   if (result.bolaFileStatus === 'vulnerable') {
     result.findings.unshift({
       id: crypto.randomUUID(), ruleId: 'bola_files', severity: 'critical',
-      title: 'BOLA: Source code accessible',
+      title: 'Exposure: Source code accessible',
       vector: 'bola_files', source: 'api.lovable.dev',
       description: 'Endpoint returns 200 OK without ownership verification',
       evidence: `HTTP 200 — ${result.filesScanned} files`,
@@ -150,7 +150,7 @@ async function scanProject(project, config) {
   if (result.bolaChatStatus === 'vulnerable') {
     result.findings.unshift({
       id: crypto.randomUUID(), ruleId: 'bola_chat', severity: 'critical',
-      title: 'BOLA: Chat history accessible',
+      title: 'Exposure: Chat history accessible',
       vector: 'bola_chat', source: 'api.lovable.dev',
       description: 'Chat history exposed',
       evidence: `HTTP 200 — ${result.chatMessagesScanned} messages`,
@@ -168,21 +168,21 @@ async function scanProject(project, config) {
 export function generateDemoData() {
   return [
     makeDemoProject('Admin Panel v2', '2025-06-15', '2026-04-10', 'vulnerable', 'vulnerable', true, 'missing', 23, 312, [
-      { id: '1', ruleId: 'bola_files', severity: 'critical', title: 'BOLA: Source code accessible', vector: 'bola_files', source: 'api', description: 'Endpoint returns 200 OK without ownership', evidence: 'HTTP 200 — 47 files', recommendation: 'Contact Lovable support.' },
-      { id: '2', ruleId: 'bola_chat', severity: 'critical', title: 'BOLA: Chat accessible', vector: 'bola_chat', source: 'api', description: 'Chat history exposed', evidence: 'HTTP 200 — 312 messages', recommendation: 'Delete sensitive chat history.' },
+      { id: '1', ruleId: 'bola_files', severity: 'critical', title: 'Exposure: Source code accessible', vector: 'bola_files', source: 'api', description: 'Endpoint returns 200 OK without ownership', evidence: 'HTTP 200 — 47 files', recommendation: 'Contact Lovable support.' },
+      { id: '2', ruleId: 'bola_chat', severity: 'critical', title: 'Exposure: Chat accessible', vector: 'bola_chat', source: 'api', description: 'Chat history exposed', evidence: 'HTTP 200 — 312 messages', recommendation: 'Delete sensitive chat history.' },
       { id: '3', ruleId: 'supabase_service_role', severity: 'critical', title: 'Supabase Service Role Key in client.ts', vector: 'hardcoded_secret', source: 'client.ts', description: 'Database admin key exposed', evidence: 'eyJh•••••Lz1', recommendation: 'Rotate key immediately.' },
       { id: '4', ruleId: 'rls_missing', severity: 'critical', title: 'RLS missing: users', vector: 'rls_missing', source: 'supabase', description: 'Table accessible without auth', evidence: 'users table returns data', recommendation: 'ALTER TABLE users ENABLE ROW LEVEL SECURITY;' },
       { id: '5', ruleId: 'openai_key', severity: 'critical', title: 'OpenAI API Key in utils.ts', vector: 'hardcoded_secret', source: 'utils.ts', description: 'AI service key exposed', evidence: 'sk-A•••••x7Q', recommendation: 'Rotate key in OpenAI dashboard.' },
     ]),
     makeDemoProject('E-commerce MVP', '2025-09-01', '2026-04-10', 'vulnerable', 'vulnerable', true, 'missing', 42, 520, [
-      { id: '6', ruleId: 'bola_files', severity: 'critical', title: 'BOLA: Source code accessible', vector: 'bola_files', source: 'api', description: 'Endpoint returns 200', evidence: 'HTTP 200 — 89 files', recommendation: 'Contact Lovable support.' },
-      { id: '7', ruleId: 'bola_chat', severity: 'critical', title: 'BOLA: Chat accessible', vector: 'bola_chat', source: 'api', description: 'Chat exposed', evidence: 'HTTP 200 — 520 messages', recommendation: 'Delete chat.' },
+      { id: '6', ruleId: 'bola_files', severity: 'critical', title: 'Exposure: Source code accessible', vector: 'bola_files', source: 'api', description: 'Endpoint returns 200', evidence: 'HTTP 200 — 89 files', recommendation: 'Contact Lovable support.' },
+      { id: '7', ruleId: 'bola_chat', severity: 'critical', title: 'Exposure: Chat accessible', vector: 'bola_chat', source: 'api', description: 'Chat exposed', evidence: 'HTTP 200 — 520 messages', recommendation: 'Delete chat.' },
       { id: '8', ruleId: 'stripe_secret', severity: 'critical', title: 'Stripe Secret Key', vector: 'hardcoded_secret', source: 'checkout.ts', description: 'Payment key exposed', evidence: 'sk_live•••••', recommendation: 'Rotate in Stripe dashboard.' },
       { id: '9', ruleId: 'cpf', severity: 'high', title: 'CPF in seed data', vector: 'pii_in_code', source: 'seed.sql', description: 'Brazilian PII in code', evidence: '123.•••', recommendation: 'Remove PII from source.' },
       { id: '10', ruleId: 'rls_missing', severity: 'critical', title: 'RLS missing: orders', vector: 'rls_missing', source: 'supabase', description: 'Orders exposed', evidence: 'orders table open', recommendation: 'Enable RLS.' },
     ]),
     makeDemoProject('Landing Page Startup', '2025-06-15', '2025-12-20', 'vulnerable', 'protected', false, 'not_tested', 12, 0, [
-      { id: '11', ruleId: 'bola_files', severity: 'critical', title: 'BOLA: Files accessible', vector: 'bola_files', source: 'api', description: 'Source exposed', evidence: 'HTTP 200', recommendation: 'Contact Lovable.' },
+      { id: '11', ruleId: 'bola_files', severity: 'critical', title: 'Exposure: Files accessible', vector: 'bola_files', source: 'api', description: 'Source exposed', evidence: 'HTTP 200', recommendation: 'Contact Lovable.' },
       { id: '12', ruleId: 'generic_api_key', severity: 'medium', title: 'API Key in config', vector: 'hardcoded_secret', source: 'config.ts', description: 'Generic key found', evidence: 'api_k•••', recommendation: 'Move to env vars.' },
     ]),
     makeDemoProject('CRM Dashboard', '2025-06-15', '2026-04-10', 'protected', 'protected', true, 'enabled', 30, 89, [

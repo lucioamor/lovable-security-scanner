@@ -1,10 +1,10 @@
 // ============================================================
-// Lovable Security Scanner — Main Application
+// Lovable Portfolio Audit — Main Application
 // ============================================================
 
 import './style.css';
-import { ScannerEngine, generateDemoData } from './lib/scanner-engine';
-import { getSeverityColor, isPreCutoff } from './lib/risk-scorer';
+import { ScannerEngine, generateDemoData } from './lib/audit-engine';
+import { getSeverityColor, isPreCutoff } from './lib/health-scorer';
 import { t, setLocale, getLocale, loadLocale, LOCALE_FLAGS, type Locale } from './lib/i18n';
 import type { ProjectScanResult, ScanProgress, ScannerConfig, ScanSummary } from './lib/types';
 
@@ -540,13 +540,13 @@ function updateProgressUI() {
 
 function exportJSON() {
   const blob = new Blob([JSON.stringify({ scanDate: new Date().toISOString(), summary: state.summary, results: state.results }, null, 2)], { type: 'application/json' });
-  download(blob, `lovable-security-scan-${new Date().toISOString().slice(0, 10)}.json`);
+  download(blob, `lovable-portfolio-audit-${new Date().toISOString().slice(0, 10)}.json`);
 }
 function exportCSV() {
   const h = ['Project', 'ID', 'Created', 'Score', 'Severity', 'Findings', 'BOLA Files', 'BOLA Chat', 'Supabase', 'RLS'];
   const rows = state.results.map(r => [r.projectName, r.projectId, r.createdAt, r.riskScore, r.severity, r.findings.length, r.bolaFileStatus, r.bolaChatStatus, r.supabaseDetected ? 'yes' : 'no', r.rlsStatus || 'n/a'].map(c => `"${c}"`).join(','));
   const blob = new Blob([[h.join(','), ...rows].join('\n')], { type: 'text/csv' });
-  download(blob, `lovable-security-scan-${new Date().toISOString().slice(0, 10)}.csv`);
+  download(blob, `lovable-portfolio-audit-${new Date().toISOString().slice(0, 10)}.csv`);
 }
 function download(blob: Blob, name: string) {
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href);

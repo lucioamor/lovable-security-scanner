@@ -2,7 +2,7 @@
 // Lovable Security Scanner — Risk Scorer
 // ============================================================
 
-import { SECURITY_RULES } from './security-rules';
+import { SECURITY_RULES } from './data-patterns';
 import type { Finding, ProjectScanResult } from './types';
 
 /**

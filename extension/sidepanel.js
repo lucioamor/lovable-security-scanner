@@ -3,7 +3,7 @@
 // ============================================================
 
 import { t, setLocale, getLocale, loadLocale, LOCALE_FLAGS } from './lib/i18n.js';
-import { getSeverityColor, isPreCutoff, getSeverity, computeRiskScore } from './lib/risk-scorer.js';
+import { getSeverityColor, isPreCutoff, getSeverity, computeRiskScore } from './lib/health-scorer.js';
 
 let currentPage = 'dashboard';
 let results = [];

@@ -1,5 +1,5 @@
 // ============================================================
-// Lovable Security Scanner — Internationalization (i18n)
+// Lovable Portfolio Audit — Internationalization (i18n)
 // ============================================================
 
 export type Locale = 'en' | 'pt' | 'es';
@@ -50,8 +50,8 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
   // ========== ENGLISH (default) ==========
   en: {
     // Sidebar
-    'sidebar.title': 'Security Scanner',
-    'sidebar.subtitle': 'LOVABLE AUDIT TOOL',
+    'sidebar.title': 'Portfolio Audit',
+    'sidebar.subtitle': 'EXPOSURE & POSTURE REVIEW',
     'nav.overview': 'Overview',
     'nav.dashboard': 'Dashboard',
     'nav.results': 'Results',
@@ -62,7 +62,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.docs_lovable': 'Lovable Docs',
     'nav.supabase_rls': 'Supabase RLS',
     'nav.crit_badge': 'crit',
-    'sidebar.footer.line1': 'Lovable Security Scanner v1.0',
+    'sidebar.footer.line1': 'Lovable Portfolio Audit v1.0',
     'sidebar.footer.line2': 'Defensive tool — Use only',
     'sidebar.footer.line3': 'on your own projects',
 
@@ -224,8 +224,8 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
   // ========== PORTUGUESE ==========
   pt: {
-    'sidebar.title': 'Security Scanner',
-    'sidebar.subtitle': 'LOVABLE AUDIT TOOL',
+    'sidebar.title': 'Portfolio Audit',
+    'sidebar.subtitle': 'EXPOSURE & POSTURE REVIEW',
     'nav.overview': 'Visão Geral',
     'nav.dashboard': 'Dashboard',
     'nav.results': 'Resultados',
@@ -236,7 +236,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.docs_lovable': 'Docs Lovable',
     'nav.supabase_rls': 'Supabase RLS',
     'nav.crit_badge': 'crit',
-    'sidebar.footer.line1': 'Lovable Security Scanner v1.0',
+    'sidebar.footer.line1': 'Lovable Portfolio Audit v1.0',
     'sidebar.footer.line2': 'Ferramenta defensiva — Use apenas',
     'sidebar.footer.line3': 'em seus próprios projetos',
 
@@ -385,8 +385,8 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
   // ========== SPANISH ==========
   es: {
-    'sidebar.title': 'Security Scanner',
-    'sidebar.subtitle': 'LOVABLE AUDIT TOOL',
+    'sidebar.title': 'Portfolio Audit',
+    'sidebar.subtitle': 'EXPOSURE & POSTURE REVIEW',
     'nav.overview': 'Visión General',
     'nav.dashboard': 'Dashboard',
     'nav.results': 'Resultados',
@@ -397,7 +397,7 @@ const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.docs_lovable': 'Docs Lovable',
     'nav.supabase_rls': 'Supabase RLS',
     'nav.crit_badge': 'crít',
-    'sidebar.footer.line1': 'Lovable Security Scanner v1.0',
+    'sidebar.footer.line1': 'Lovable Portfolio Audit v1.0',
     'sidebar.footer.line2': 'Herramienta defensiva — Úsela solo',
     'sidebar.footer.line3': 'en sus propios proyectos',
 

@@ -57,10 +57,10 @@
 </head>
 <body>
   <div class="header">
-    <div class="logo">🛡️</div>
+    <div class="logo">📊</div>
     <div>
-      <div class="title">Lovable Security Scanner</div>
-      <div class="subtitle">LOVABLE AUDIT TOOL</div>
+      <div class="title">Lovable Portfolio Audit</div>
+      <div class="subtitle">EXPOSURE &amp; POSTURE REVIEW</div>
     </div>
   </div>
 
@@ -75,7 +75,7 @@
     </div>
   </div>
 
-  <button class="btn btn-primary" id="btn-scan" disabled>🔍 Scan All Projects</button>
+  <button class="btn btn-primary" id="btn-scan" disabled>🔍 Inspect Projects</button>
   <button class="btn btn-ghost" id="btn-panel">📊 Open Dashboard</button>
   <button class="btn btn-ghost" id="btn-demo">📦 Load Demo</button>
 
@@ -95,7 +95,7 @@
     chrome.runtime.sendMessage({ type: 'CHECK_SESSION' }, (res) => {
       if (res?.hasSession) {
         statusEl.className = 'status ok';
-        statusEl.textContent = '✅ Session detected — ready to scan';
+        statusEl.textContent = '✅ Session detected — ready to inspect';
         scanBtn.disabled = false;
       } else {
         statusEl.className = 'status warn';
@@ -120,7 +120,7 @@
     // Scan button
     scanBtn.addEventListener('click', () => {
       scanBtn.disabled = true;
-      scanBtn.textContent = '⏳ Scanning...';
+      scanBtn.textContent = '⏳ Inspecting...';
       chrome.runtime.sendMessage({ type: 'START_SCAN', config: { includeFiles: true, includeChat: true, testRLS: true, scanDelay: 500 } });
     });
 
@@ -128,7 +128,7 @@
     chrome.runtime.onMessage.addListener((msg) => {
       if (msg.type === 'SCAN_COMPLETE') {
         scanBtn.disabled = false;
-        scanBtn.textContent = '🔍 Scan All Projects';
+        scanBtn.textContent = '🔍 Inspect Projects';
         statsEl.style.display = 'block';
         const s = msg.summary;
         document.getElementById('s-crit').textContent = s.criticalCount;

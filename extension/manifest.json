@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Lovable Security Scanner",
+  "name": "Lovable Portfolio Audit",
   "version": "1.0.0",
-  "description": "Audit your Lovable.dev projects for exposed credentials, BOLA/IDOR vulnerabilities, missing Supabase RLS, and PII leakage. 100% local.",
+  "description": "Audit your Lovable.dev projects for exposed configurations, missing Supabase RLS, and data exposure. A setup hygiene tool. 100% local.",
   "permissions": [
     "cookies",
     "activeTab",

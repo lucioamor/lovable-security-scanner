@@ -1,10 +1,10 @@
 // ============================================================
-// Lovable API Client — Chrome Extension version
+// Lovable Portfolio Audit — API Client (Chrome Extension)
 // Uses chrome.cookies for automatic auth, bypasses CORS
 // ============================================================
 
 const API_BASE = 'https://api.lovable.dev';
-const USER_AGENT = 'NXLV-Scanner/1.0 (+https://github.com/lucioamor/lovable-security-scanner)';
+const USER_AGENT = 'NXLV-Audit/1.0 (+https://github.com/lucioamorim/lovable-portfolio-audit)';
 
 let sessionToken = null;
 let lastRequestTime = 0;
@@ -32,7 +32,7 @@ export async function getSessionToken() {
     if (stored.lss_manual_token) { sessionToken = stored.lss_manual_token; return sessionToken; }
     return null;
   } catch (e) {
-    console.error('[LSS] Failed to get session:', e);
+    console.error('[LPI] Failed to get session:', e);
     return null;
   }
 }

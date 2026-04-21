@@ -3,9 +3,9 @@
 // ============================================================
 
 import { LovableAPIClient } from './lovable-api-client';
-import { scanForSecrets, scanForPII, isSensitiveFile } from './security-rules';
-import { calculateRiskScore, getSeverityFromScore, isPreCutoff, isActiveProject } from './risk-scorer';
-import { extractSupabaseCredentials, testRLS } from './supabase-scanner';
+import { scanForSecrets, scanForPII, isSensitiveFile } from './data-patterns';
+import { calculateRiskScore, getSeverityFromScore, isPreCutoff, isActiveProject } from './health-scorer';
+import { extractSupabaseCredentials, testRLS } from './supabase-inspector';
 import type {
   ScannerConfig,
   ScanProgress,
@@ -153,19 +153,19 @@ export class ScannerEngine {
     // Accumulated source code for credential extraction
     let allSourceCode = '';
 
-    // Step A: Test file access (BOLA check)
+    // Step A: Test file access (Exposure check)
     if (this.config.includeFiles) {
       const filesResult = await this.client.getProjectFiles(project.id);
       bolaFileStatus = filesResult.status === 200 ? 'vulnerable' : 'protected';
 
       if (filesResult.status === 200 && filesResult.files) {
-        // BOLA vulnerability — files are accessible
+        // Exposure vulnerability — files are accessible
         if (isPreCutoff(project.created_at)) {
           findings.push({
             id: this.findingId(),
             vector: 'bola_files',
             severity: 'critical',
-            title: 'BOLA: Código-fonte acessível sem autorização',
+            title: 'Exposure: Código-fonte acessível sem autorização',
             description: `O endpoint /projects/${project.id}/git/files retorna 200 OK. O código-fonte deste projeto está potencialmente acessível para qualquer usuário autenticado na plataforma.`,
             evidence: `HTTP ${filesResult.status} — ${filesResult.files.files.length} arquivos listados`,
             recommendation: 'Contate o suporte da Lovable para solicitar a aplicação do patch de ownership check neste projeto. Enquanto isso, rotacione todas as credenciais encontradas no código.',
@@ -255,7 +255,7 @@ export class ScannerEngine {
       }
     }
 
-    // Step B: Test chat access (BOLA check)
+    // Step B: Test chat access (Exposure check)
     if (this.config.includeChat) {
       const chatResult = await this.client.getProjectMessages(project.id);
       bolaChatStatus = chatResult.status === 200 ? 'vulnerable' : 'protected';
@@ -266,7 +266,7 @@ export class ScannerEngine {
             id: this.findingId(),
             vector: 'bola_chat',
             severity: 'critical',
-            title: 'BOLA: Histórico de chat acessível sem autorização',
+            title: 'Exposure: Histórico de chat acessível sem autorização',
             description: `O endpoint /projects/${project.id}/messages retorna 200 OK. Todas as conversas com a IA deste projeto estão potencialmente legíveis.`,
             evidence: `HTTP ${chatResult.status} — ${chatResult.messages.events?.length || 0} mensagens`,
             recommendation: 'Contate o suporte da Lovable. Revise o chat history para identificar credenciais compartilhadas e rotacione-as.',
@@ -442,8 +442,8 @@ export function generateDemoData(): ProjectScanResult[] {
       riskScore: 95,
       severity: 'critical',
       findings: [
-        { id: 'f1', vector: 'bola_files', severity: 'critical', title: 'BOLA: Código-fonte acessível', description: 'Endpoint retorna 200 OK sem verificação de ownership', evidence: 'HTTP 200 — 47 arquivos', recommendation: 'Contate suporte Lovable' },
-        { id: 'f2', vector: 'bola_chat', severity: 'critical', title: 'BOLA: Chat acessível', description: 'Histórico de conversas exposto', evidence: 'HTTP 200 — 312 mensagens', recommendation: 'Contate suporte Lovable' },
+        { id: 'f1', vector: 'bola_files', severity: 'critical', title: 'Exposure: Código-fonte acessível', description: 'Endpoint retorna 200 OK sem verificação de ownership', evidence: 'HTTP 200 — 47 arquivos', recommendation: 'Contate suporte Lovable' },
+        { id: 'f2', vector: 'bola_chat', severity: 'critical', title: 'Exposure: Chat acessível', description: 'Histórico de conversas exposto', evidence: 'HTTP 200 — 312 mensagens', recommendation: 'Contate suporte Lovable' },
         { id: 'f3', vector: 'hardcoded_secret', severity: 'critical', title: 'Supabase Service Role Key em client.ts', description: 'Chave de admin do banco de dados exposta', evidence: 'eyJh•••••Lz1', file: 'src/integrations/supabase/client.ts', line: 19, recommendation: 'Rotacione imediatamente' },
         { id: 'f4', vector: 'rls_missing', severity: 'critical', title: 'RLS ausente: users', description: 'Tabela users acessível sem autenticação', evidence: 'Tabela users retorna dados', recommendation: 'Habilite RLS' },
         { id: 'f5', vector: 'pii_in_chat', severity: 'medium', title: 'Email no chat', description: 'Email encontrado em conversa com IA', evidence: 'admi••••@gma••••', recommendation: 'Revise dados compartilhados' },
@@ -466,7 +466,7 @@ export function generateDemoData(): ProjectScanResult[] {
       riskScore: 55,
       severity: 'high',
       findings: [
-        { id: 'f6', vector: 'bola_files', severity: 'critical', title: 'BOLA: Código-fonte acessível', description: 'Projeto pré-patch retorna 200', evidence: 'HTTP 200 — 18 arquivos', recommendation: 'Contate suporte' },
+        { id: 'f6', vector: 'bola_files', severity: 'critical', title: 'Exposure: Código-fonte acessível', description: 'Projeto pré-patch retorna 200', evidence: 'HTTP 200 — 18 arquivos', recommendation: 'Contate suporte' },
         { id: 'f7', vector: 'hardcoded_secret', severity: 'high', title: 'OpenAI Key em api.ts', description: 'Chave de API OpenAI exposta', evidence: 'sk-p••••••3xQ', file: 'src/api.ts', line: 5, recommendation: 'Rotacione a chave' },
       ],
       filesScanned: 12,
@@ -524,7 +524,7 @@ export function generateDemoData(): ProjectScanResult[] {
       riskScore: 88,
       severity: 'critical',
       findings: [
-        { id: 'f10', vector: 'bola_files', severity: 'critical', title: 'BOLA: Código-fonte acessível', description: 'Projeto criado set/2025', evidence: 'HTTP 200 — 65 arquivos', recommendation: 'Contate suporte' },
+        { id: 'f10', vector: 'bola_files', severity: 'critical', title: 'Exposure: Código-fonte acessível', description: 'Projeto criado set/2025', evidence: 'HTTP 200 — 65 arquivos', recommendation: 'Contate suporte' },
         { id: 'f11', vector: 'hardcoded_secret', severity: 'critical', title: 'Stripe Live Key em payments.ts', description: 'Chave de pagamento real exposta', evidence: 'sk_l••••••9Kz', file: 'src/payments.ts', line: 12, recommendation: 'Rotacione URGENTE' },
         { id: 'f12', vector: 'hardcoded_secret', severity: 'critical', title: 'DB Connection String em config.ts', description: 'String de conexão PostgreSQL', evidence: 'post••••••:543••••', file: 'src/config.ts', recommendation: 'Rotacione credenciais' },
         { id: 'f13', vector: 'rls_missing', severity: 'critical', title: 'RLS ausente: orders', description: 'Tabela de pedidos acessível', evidence: 'Tabela orders sem RLS', recommendation: 'Habilite RLS' },

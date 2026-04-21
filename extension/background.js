@@ -2,7 +2,7 @@
 // Background Service Worker — Scan orchestrator
 // ============================================================
 
-import { runScan, abortScan, generateDemoData } from './lib/scanner-engine.js';
+import { runScan, abortScan, generateDemoData } from './lib/audit-engine.js';
 import { getSessionToken, hasSession } from './lib/api-client.js';
 
 // Keep alive during long scans
@@ -113,5 +113,5 @@ chrome.sidePanel?.setPanelBehavior?.({ openPanelOnActionClick: false });
 
 // On install
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[LSS] Lovable Security Scanner installed');
+  console.log('[LPA] Lovable Portfolio Audit installed');
 });
