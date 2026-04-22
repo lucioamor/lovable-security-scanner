@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --pool=threads",
     "build:cli": "cd packages/cli && npm run build",
     "build:ext": "echo 'Extension: load unpacked from ./extension in Chrome'"
   },
