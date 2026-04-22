@@ -37,6 +37,16 @@ function updateBadge(summary) {
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   switch (msg.type) {
 
+    case 'LOVABLE_AUTH_TOKEN': {
+      if (msg.token) {
+        const tokenVal = msg.token.replace(/^Bearer\s+/i, '');
+        chrome.storage.local.set({ lss_manual_token: tokenVal });
+        logger.info('auto-captured token from page context');
+      }
+      sendResponse({ received: true });
+      return true;
+    }
+
     case 'CHECK_SESSION': {
       hasSession().then(has => sendResponse({ hasSession: has }));
       return true;
