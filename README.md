@@ -10,13 +10,34 @@ Reports of credential leakage, data breaches, and access vulnerabilities affecti
 
 This tool doesn't place blame — it places the solution in your hands. Instead of waiting for a platform to alert you, you audit yourself, find what's exposed, and fix it. That's it.
 
-## What it checks
+## What it does
 
-- **Credentials in source** — 16 patterns including Supabase, OpenAI, Stripe, AWS, JWT, GitHub, Firebase
-- **PII in project data** — 7 patterns including email, phone, CPF/CNPJ, credit card, Stripe customer IDs
-- **Supabase Row-Level Security** — non-invasive read-only check of RLS configuration on your tables
-- **Project access visibility** — flags projects where source or chat endpoints may be accessible beyond your intent
-- **Hygiene score** — 0–100 weighted score with Critical / High / Medium / Low / Clean severity levels
+### 🔍 Detection Engine
+
+| Component | What it catches |
+|---|---|
+| 🔑 **16 Secret Patterns** | Supabase `service_role`, OpenAI `sk-*`, Stripe `sk_live_*`, AWS `AKIA*`, JWT secrets, GitHub `ghp_*`, Firebase `AIza*`, SendGrid `SG.*`, Twilio, PEM private keys, and more |
+| 👤 **7 PII Patterns** | Email addresses, LinkedIn profiles, CPF/CNPJ (Brazilian tax IDs), credit card numbers (Luhn-validated), phone numbers, Stripe customer IDs (`cus_*`) |
+| 🛡️ **BOLA/IDOR Test** | Probes file and chat endpoints to verify if your project returns `200 OK` without ownership validation — the core vulnerability affecting pre-Nov/2025 projects |
+| 🗄️ **Supabase RLS Audit** | Non-invasive check against 30+ common table names using only the `anon` key — detects tables with no RLS or overly permissive policies |
+
+### 📊 Analysis & Reporting
+
+| Component | What it does |
+|---|---|
+| 🎯 **Risk Scoring (0–100)** | Weighted formula combining project age, BOLA exposure, secret count, PII matches, and RLS status — auto-classifies as **Critical** / **High** / **Medium** / **Low** / **Clean** |
+| 🖥️ **Premium Dashboard** | Dark theme with glassmorphism, animated risk rings, severity badges, and real-time scan progress — not a terminal tool, a proper interface |
+| 📋 **Project Detail Panel** | Click any project for full breakdown: exposure status, individual findings with masked evidence, and remediation guidance per finding |
+| 📦 **Demo Mode** | Explore the full interface with realistic sample data — no token needed, no API calls, instant preview |
+
+### 🚀 Output & Actions
+
+| Component | What you get |
+|---|---|
+| 📥 **JSON Export** | Full structured report with all findings, scores, and metadata — machine-readable for automation |
+| 📊 **CSV Export** | Spreadsheet-ready summary — one row per project with score, severity, and finding count |
+| 🔐 **Signed Evidence Pack** | HMAC-SHA256 signed report for tamper-proof forensic documentation (see [verification](#verifying-an-evidence-pack) below) |
+| 🌐 **Trilingual UI** | 🇺🇸 English (default) · 🇧🇷 Português · 🇪🇸 Español — switch instantly, no reload |
 
 ## Two ways to run it
 
@@ -38,13 +59,7 @@ npm run dev
 
 Opens at `http://localhost:5173`. Real inspections from the web app require a CORS proxy since browsers block cross-origin requests to `api.lovable.dev`. The extension is the recommended path.
 
-## Languages
 
-🇺🇸 English (default) · 🇧🇷 Português · 🇪🇸 Español
-
-## Export
-
-JSON and CSV reports available from the dashboard.
 
 ### Verifying an Evidence Pack
 
